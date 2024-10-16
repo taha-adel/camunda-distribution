@@ -13,7 +13,7 @@ jobs:
             run_e2e_tests: false
           - compose_args: "-f docker-compose.yaml"
             run_e2e_tests: false
-    name: Testing ${{ matrix.compose_args.split(' ')[1].split('.')[0] }}
+    name: Testing for ${{ matrix.compose_args }}
     uses: ./.github/workflows/template-deploy.yaml
     secrets: inherit
     with:

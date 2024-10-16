@@ -8,15 +8,15 @@ jobs:
     strategy:
       matrix:
         directory: ["docker-compose/camunda-8.4"]
-        include:
+        compose:
           - compose_args: "-f docker-compose-core.yaml"
             run_e2e_tests: false
           - compose_args: "-f docker-compose.yaml"
             run_e2e_tests: false
-    name: Testing for ${{ matrix.compose_args }}
+    name: Testing for ${{ matrix.compose.compose_args }}
     uses: ./.github/workflows/template-deploy.yaml
     secrets: inherit
     with:
-      compose_args: ${{ matrix.compose_args }}
-      run_e2e_tests: ${{ matrix.run_e2e_tests }}
+      compose_args: ${{ matrix.compose.compose_args }}
+      run_e2e_tests: ${{ matrix.compose.run_e2e_tests }}
       directory: ${{ matrix.directory }}

@@ -11,19 +11,22 @@ on:
         description: runs playwright tests
         required: true
         type: boolean
+      directory:
+        description: directory contains compose files
+        required: false
+        type: string
 
 jobs:
   test_compose_deploy:
     name: Test deploying camunda platform on docker compose
     runs-on: ubuntu-latest
     steps:
-
       - name: disable and stop mono-xsp4.service
         run: |
-             sudo systemctl stop mono-xsp4.service || true
-             sudo systemctl disable mono-xsp4.service || true
-             sudo killall mono || true
-             sudo killall xsp4 || true
+          sudo systemctl stop mono-xsp4.service || true
+          sudo systemctl disable mono-xsp4.service || true
+          sudo killall mono || true
+          sudo killall xsp4 || true
 
       - uses: actions/checkout@v4
 
@@ -32,6 +35,7 @@ jobs:
           echo '${{ secrets.CI_DISTRIBUTION_REGISTRY_PASSWORD }}' | docker login -u ci-distribution --password-stdin  registry.camunda.cloud
 
       - name: Bring up containers
+        working-directory: ${{ inputs.directory || '.' }}
         run: >-
           docker compose ${{ inputs.compose_args }}
           up

@@ -1,13 +1,22 @@
-name: "Test docker-compose-core.yaml"
+name: "Test docker-compose"
 on:
   push:
     branches:
       - "**"
 jobs:
   test_core:
+    strategy:
+      matrix:
+        directory: ["docker-compose/camunda-8.4"]
+        include:
+          - compose_args: "-f docker-compose-core.yaml"
+            run_e2e_tests: false
+          - compose_args: "-f docker-compose.yaml"
+            run_e2e_tests: false
+    name: Testing ${{ matrix.compose_args.split(' ')[1].split('.')[0] }}
     uses: ./.github/workflows/template-deploy.yaml
     secrets: inherit
     with:
-      compose_args: "-f docker-compose-core.yaml"
-      run_e2e_tests: false
-
+      compose_args: ${{ matrix.compose_args }}
+      run_e2e_tests: ${{ matrix.run_e2e_tests }}
+      directory: ${{ matrix.directory }}
